@@ -39,7 +39,7 @@
 }
 #pragma mark --- UITableViewDelegate,UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
+    return 10;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 44;
@@ -47,6 +47,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell"];
     cell.textLabel.text = [NSString stringWithFormat:@"index---%tu", indexPath.row];
+    cell.textLabel.textColor = UIColor.darkGrayColor;
     return cell;
 }
 
@@ -96,12 +97,18 @@
 }
 - (void)lx_successRequestData:(nullable id)responseData url:(NSString*)url {
 //    NSLog(@"11111---%@---%@", responseData,url);
+    NSLog(@"11111---%@", url);
 }
 - (void)lx_failRequestWithMessage:(nullable NSString*)msg code:(NSInteger)code url:(NSString*)url {
 //    NSLog(@"22222---%@---%tu---%@",msg,code,url);
+    NSLog(@"22222---%@", url);
 }
 - (void)lx_successRequestCurrentPageData:(nullable NSArray*)curArr totalData:(nullable NSArray*)totalArr url:(nonnull NSString*)url {
 //    NSLog(@"11111---%@---%@---%@", curArr,totalArr,url);
+    NSLog(@"11111---%@", url);
+}
+- (void)lx_cancelTaskWithUrl:(nonnull NSString*)url {
+    NSLog(@"lx_cancelTaskWithUrl---%@",url);
 }
 
 @end

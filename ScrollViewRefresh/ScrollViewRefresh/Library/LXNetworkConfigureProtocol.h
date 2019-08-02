@@ -27,19 +27,17 @@ typedef NS_ENUM(NSUInteger, LXRefreshOption) {
 @required
 ///网络请求的url地址,必传参数
 - (nonnull NSString*)lx_url;
-///是否是分页数据
-- (BOOL)lx_isPageData;
 
-///请求非分页网络数据成功
-- (void)lx_successRequestData:(nullable id)responseData url:(nonnull NSString*)url;
-///请求分页网络数据成功,curArr：当前页的数组数据 totalArr：所有的数组数据包括当前页的数据在内
-- (void)lx_successRequestCurrentPageData:(nullable NSArray*)curArr totalData:(nullable NSArray*)totalArr url:(nonnull NSString*)url;
 ///请求网络数据失败
 - (void)lx_failRequestWithMessage:(nullable NSString*)msg code:(NSInteger)code url:(nonnull NSString*)url;
 
 @optional
+#pragma mark --- request
 ///网络请求Method类型：'GET','PUT','POST','DELETE'，默认是'POST'请求
 - (LXMethodOption)lx_methodOption;
+
+///是否是分页数据,默认是NO
+- (BOOL)lx_isPageData;
 
 ///网络请求的参数
 - (nullable id)lx_parameters;
@@ -52,6 +50,8 @@ typedef NS_ENUM(NSUInteger, LXRefreshOption) {
 ///请求头的设置
 - (nullable NSDictionary*)lx_requestHeaderFiled;
 
+
+#pragma mark --- response
 ///数据对应的模型
 - (nullable Class)lx_dataClass;
 
@@ -66,6 +66,21 @@ typedef NS_ENUM(NSUInteger, LXRefreshOption) {
 
 ///响应分页数据实体的数组key值，默认是'records'
 - (nullable NSString*)lx_onePageDataArrName;
+
+///用于界面中有使用dispatch_group_t调度组的接口使用，避免高并发导致的group中的leave和enter个数不匹配。
+- (void)lx_cancelTaskWithUrl:(nonnull NSString*)url;
+
+/**
+ 非分页网络数据响应成功
+ @warning 此方法和'分页网络数据响应成功'必须实现一个
+ */
+- (void)lx_successRequestData:(nullable id)responseData url:(nonnull NSString*)url;
+
+/**
+ 分页网络数据响应成功,curArr：当前页的数组数据 totalArr：所有的数组数据包括当前页的数据在内
+ @warning 此方法和'非分页网络数据响应成功'必须实现一个
+ */
+- (void)lx_successRequestCurrentPageData:(nullable NSArray*)curArr totalData:(nullable NSArray*)totalArr url:(nonnull NSString*)url;
 
 @end
 

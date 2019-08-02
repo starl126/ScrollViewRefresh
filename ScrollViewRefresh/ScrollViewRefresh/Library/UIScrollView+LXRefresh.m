@@ -12,8 +12,9 @@
 @interface LXTaskManagerModel : NSObject
 
 @property (nonatomic, readonly) NSString* url;
-@property (nonatomic, assign) NSUInteger latestIdentifier;
+@property (nonatomic,   assign) NSUInteger latestIdentifier;
 @property (nonatomic, readonly) NSMutableArray<NSURLSessionDataTask*>* taskArrM;
+
 - (instancetype)initWithUrl:(NSString*)url identifier:(NSUInteger)identifier taskArr:(NSArray*)taskArr;
 
 @end
@@ -231,9 +232,6 @@
         // set responseSerializer's types
         self.manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/html",@"text/json",@"text/javascript",@"text/plain", @"image/jpeg",nil];
         self.manager.requestSerializer = [AFJSONRequestSerializer serializer];
-        [self.manager.requestSerializer setValue:@"2383008733b63a519e9ff7efcbc28960.3LqIwOst17" forHTTPHeaderField:@"signature"];
-        NSString* token = @"eyJhbGciOiJIUzUxMiIsInppcCI6IkRFRiJ9.eNpkzkkOwjAMheG7eN1IcexETm_AMTI0IogO0FZiEHcn6oINW-vT__yGuq7Qw62-zjWHGTqoYYMerWNnmRA7CHtuAkUTMYnWtqHLVtutkKTCYVAps1bMJikRiUqblErGYNjGhofHchQdiTmK6x7_ilMsv1n0DS3XsJX5PkKvO0jzuITpeWqfiBjUFsU7suS9k88XAAD__w.PeiOwtUlVNZYy4Z9e4XwBRs9VYDJzJRYy58ksyV-WRa1_SZQfdCxTObSFPzooM4gaNpmpeQbZuieDPk7ZFQ0kQ";
-        [self.manager.requestSerializer setValue:token forHTTPHeaderField:@"accessToken"];
     });
 }
 
@@ -352,11 +350,21 @@
 ///缓存task处理
 - (void)lx_cacheTask:(NSURLSessionDataTask*)task url:(NSString*)url  {
     LXTaskManagerModel* existModel = nil;
+    __weak typeof(self) lx_weakSelf = self;
+    
     for (LXTaskManagerModel* model in self.lx_taskArrM) {
         if ([model.url isEqualToString:url]) {
             model.latestIdentifier = task.taskIdentifier;
+            
+            BOOL needCancelTaskAction = NO;
+            if ([lx_weakSelf.lx_delegate respondsToSelector:@selector(lx_cancelTaskWithUrl:)]) {
+                needCancelTaskAction = YES;
+            }
             [model.taskArrM enumerateObjectsUsingBlock:^(NSURLSessionDataTask * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 [obj cancel];
+                if (needCancelTaskAction) {
+                    [lx_weakSelf.lx_delegate lx_cancelTaskWithUrl:url];
+                }
             }];
             [model.taskArrM removeAllObjects];
             existModel = model;
@@ -364,8 +372,10 @@
         }
     }
     if (existModel) {
+        NSLog(@"count=%tu",existModel.taskArrM.count);
         [existModel.taskArrM addObject:task];
     }else {
+        NSLog(@"count=%tu",existModel.taskArrM.count);
         LXTaskManagerModel* taskModel = [[LXTaskManagerModel alloc] initWithUrl:url identifier:task.taskIdentifier taskArr:@[task]];
         [self.lx_taskArrM addObject:taskModel];
     }
@@ -433,7 +443,7 @@
                     [self.lx_dataSourceArrM addObjectsFromArray:models];
                 }
                 if ([self.lx_delegate respondsToSelector:@selector(lx_successRequestCurrentPageData:totalData:url:)]) {
-                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
+//                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
                     [self.lx_delegate lx_successRequestCurrentPageData:models totalData:self.lx_dataSourceArrM.copy url:url];
                 }
             }else {
@@ -443,14 +453,14 @@
                     [self.lx_dataSourceArrM addObjectsFromArray:arr];
                 }
                 if ([self.lx_delegate respondsToSelector:@selector(lx_successRequestCurrentPageData:totalData:url:)]) {
-                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
+//                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
                     [self.lx_delegate lx_successRequestCurrentPageData:arr totalData:self.lx_dataSourceArrM.copy url:url];
                 }
             }
             self.lx_current = current;
             self.lx_total = pages;
             self.lx_previous = self.lx_current;
-            NSLog(@"lx_total=%tu,lx_current=%tu",self.lx_total,self.lx_current);
+            
             self.lx_footer.stateLabel.hidden = NO;
             if (current >= pages) {
                 [self.lx_footer endRefreshingWithNoMoreData];
@@ -474,12 +484,12 @@
                 }
                 
                 if ([self.lx_delegate respondsToSelector:@selector(lx_successRequestData:url:)]) {
-                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
+//                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
                     [self.lx_delegate lx_successRequestData:model url:url];
                 }
             }else {
                 if ([self.lx_delegate respondsToSelector:@selector(lx_successRequestData:url:)]) {
-                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
+//                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
                     [self.lx_delegate lx_successRequestData:data url:url];
                 }
             }
@@ -495,12 +505,12 @@
     NSString* url = task.originalRequest.URL.absoluteString;
     //判断是否是主动cancel的任务
     if (error.code == -999 || [error.localizedDescription isEqualToString:@"cancelled"]) {
-        NSLog(@"取消task导致的无效identifier=%tu",task.taskIdentifier);
+//        NSLog(@"取消task导致的无效identifier=%tu",task.taskIdentifier);
         return;
     }
     BOOL valid = [self lx_isLatestRequestWithUrl:task.response.URL.absoluteString taskIdentifier:task.taskIdentifier];
     if (!valid) {
-        NSLog(@"无效identifier=%tu",task.taskIdentifier);
+//        NSLog(@"无效identifier=%tu",task.taskIdentifier);
         return;
     }
 
