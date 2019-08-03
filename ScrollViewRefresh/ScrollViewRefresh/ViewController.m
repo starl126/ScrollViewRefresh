@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "Library/UIScrollView+LXRefresh.h"
+#import "Library/UIView+Network.h"
 #import "LXStockModel.h"
 
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource,LXNetworkConfigureProtocol>
@@ -97,15 +97,12 @@
 }
 - (void)lx_successRequestData:(nullable id)responseData url:(NSString*)url {
 //    NSLog(@"11111---%@---%@", responseData,url);
-    NSLog(@"11111---%@", url);
 }
 - (void)lx_failRequestWithMessage:(nullable NSString*)msg code:(NSInteger)code url:(NSString*)url {
 //    NSLog(@"22222---%@---%tu---%@",msg,code,url);
-    NSLog(@"22222---%@", url);
 }
 - (void)lx_successRequestCurrentPageData:(nullable NSArray*)curArr totalData:(nullable NSArray*)totalArr url:(nonnull NSString*)url {
 //    NSLog(@"11111---%@---%@---%@", curArr,totalArr,url);
-    NSLog(@"11111---%@", url);
 }
 - (void)lx_cancelTaskWithUrl:(nonnull NSString*)url {
     NSLog(@"lx_cancelTaskWithUrl---%@",url);

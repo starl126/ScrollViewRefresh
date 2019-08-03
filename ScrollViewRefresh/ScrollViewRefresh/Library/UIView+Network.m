@@ -1,13 +1,17 @@
 //
-//  UIScrollView+LXRefresh.m
+//  UIView+Network.m
 //  ScrollViewRefresh
 //
-//  Created by 天边的星星 on 2019/7/23.
+//  Created by 天边的星星 on 2019/8/3.
 //  Copyright © 2019 starxin. All rights reserved.
 //
 
+#import "UIView+Network.h"
 #import "UIScrollView+LXRefresh.h"
-#import <objc/runtime.h>
+
+#define LXScrollSelf UIScrollView* scrollSelf = (UIScrollView*)self
+#define LXScrollWeakSelf __weak typeof(UIScrollView*) lx_scrollWeakSelf = (UIScrollView*)self
+#define LXWeakSelf __weak typeof(self) lx_weakSelf = self
 
 @interface LXTaskManagerModel : NSObject
 
@@ -32,7 +36,7 @@
 
 @end
 
-@interface UIScrollView ()
+@interface UIView ()
 
 ///当前页
 @property (nonatomic, assign) NSInteger lx_current;
@@ -55,21 +59,26 @@
 
 @end
 
-@implementation UIScrollView (LXRefresh)
+@implementation UIView (Network)
 
 #pragma mark --- 处理刷新
 - (void)lx_actionForDealWithRefresh {
+    if (![self isKindOfClass:UIScrollView.class]) {
+        return;
+    }
     if ([self.lx_delegate respondsToSelector:@selector(lx_refreshOption)]) {
         LXRefreshOption opt = [self.lx_delegate lx_refreshOption];
-        __weak typeof(self) lx_weakSelf = self;
+        LXScrollSelf;
+        LXWeakSelf;
+        
         switch (opt) {
             case LXRefreshOptionHeader:
             {
                 MJRefreshStateHeader* header = [MJRefreshStateHeader headerWithRefreshingBlock:^{
                     [lx_weakSelf lx_actionForPullDownRefresh];
                 }];
-                self.mj_header = header;
-                self.lx_header = header;
+                scrollSelf.mj_header = header;
+                scrollSelf.lx_header = header;
             }
                 break;
             case LXRefreshOptionFooter:
@@ -79,8 +88,8 @@
                 }];
                 footer.stateLabel.hidden = YES;
                 [footer endRefreshingWithNoMoreData];
-                self.mj_footer = footer;
-                self.lx_footer = footer;
+                scrollSelf.mj_footer = footer;
+                scrollSelf.lx_footer = footer;
             }
                 break;
             case LXRefreshOptionHeaderFooter:
@@ -88,15 +97,15 @@
                 MJRefreshStateHeader* header = [MJRefreshStateHeader headerWithRefreshingBlock:^{
                     [lx_weakSelf lx_actionForPullDownRefresh];
                 }];
-                self.mj_header = header;
-                self.lx_header = header;
+                scrollSelf.mj_header = header;
+                scrollSelf.lx_header = header;
                 MJRefreshBackNormalFooter* footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
                     [lx_weakSelf lx_actionForPullUpRefresh];
                 }];
                 footer.stateLabel.hidden = YES;
                 [footer endRefreshingWithNoMoreData];
-                self.mj_footer = footer;
-                self.lx_footer = footer;
+                scrollSelf.mj_footer = footer;
+                scrollSelf.lx_footer = footer;
             }
                 break;
             default:
@@ -106,35 +115,37 @@
 }
 ///下拉刷新
 - (void)lx_actionForPullDownRefresh {
-    if (self.mj_footer.isRefreshing) {
-        [self.mj_footer endRefreshing];
-        [self.mj_footer resetNoMoreData];
+    LXScrollSelf;
+    if (scrollSelf.mj_footer.isRefreshing) {
+        [scrollSelf.mj_footer endRefreshing];
+        [scrollSelf.mj_footer resetNoMoreData];
     }
-    self.lx_current = 1;
-    [self lx_actionForStartRequestData];
+    scrollSelf.lx_current = 1;
+    [scrollSelf lx_actionForStartRequestData];
 }
 ///上拉加载更多
 - (void)lx_actionForPullUpRefresh {
-    if (self.mj_header.isRefreshing) {
-        [self.mj_footer endRefreshing];
-        [self.mj_footer resetNoMoreData];
+    LXScrollSelf;
+    if (scrollSelf.mj_header.isRefreshing) {
+        [scrollSelf.mj_footer endRefreshing];
+        [scrollSelf.mj_footer resetNoMoreData];
         return;
     }
-    if (self.lx_current >= self.lx_total) {
-        [self.mj_footer endRefreshingWithNoMoreData];
+    if (scrollSelf.lx_current >= self.lx_total) {
+        [scrollSelf.mj_footer endRefreshingWithNoMoreData];
         return;
     }
-    self.lx_current++;
-    [self lx_actionForStartRequestData];
+    scrollSelf.lx_current++;
+    [scrollSelf lx_actionForStartRequestData];
 }
 - (void)lx_actionForStartRequestData {
- 
+    
     LXMethodOption method = [self lx_method];
     NSString* url = [self lx_checkedUrl];
     [self lx_cacheIsPageWithUrl:url];
     id parameter = [self lx_checkedParameter];
     
-    __weak typeof(self) lx_weakSelf = self;
+    LXWeakSelf;
     switch (method) {
         case LXMethodOptionGet:
         {
@@ -242,6 +253,10 @@
 #pragma mark --- private
 ///是否分页
 - (BOOL)lx_isPageList {
+    if (![self isKindOfClass:UIScrollView.class]) {
+        return NO;
+    }
+    
     BOOL isPageList = NO;
     if ([self.lx_delegate respondsToSelector:@selector(lx_isPageData)]) {
         isPageList = [self.lx_delegate lx_isPageData];
@@ -398,6 +413,10 @@
 }
 ///缓存是否是分页
 - (void)lx_cacheIsPageWithUrl:(NSString*)url {
+    if (![self isKindOfClass:UIScrollView.class]) {
+        [self.lx_isPageDictM setObject:@(NO) forKey:url];
+        return;
+    }
     BOOL isPage = NO;
     if ([self.lx_delegate respondsToSelector:@selector(lx_isPageData)]) {
         isPage = [self.lx_delegate lx_isPageData];
@@ -407,7 +426,7 @@
 ///请求成功网络数据处理
 - (void)lx_dealWithResponseDataTask:(NSURLSessionDataTask*)task responseObject:(id)responseObject {
     NSString* url = task.response.URL.absoluteString;
-
+    
     BOOL valid = [self lx_isLatestRequestWithUrl:url taskIdentifier:task.taskIdentifier];
     if (!valid) {
         if ([self.lx_delegate respondsToSelector:@selector(lx_cancelTaskWithUrl:)]) {
@@ -416,7 +435,7 @@
         NSLog(@"无效identifier=%tu",task.taskIdentifier);
         return;
     }
-
+    
     if (responseObject) {
         NSInteger code = [responseObject[@"code"] integerValue];
         NSString* msg  = responseObject[@"msg"];
@@ -450,7 +469,7 @@
                     [self.lx_dataSourceArrM addObjectsFromArray:models];
                 }
                 if ([self.lx_delegate respondsToSelector:@selector(lx_successRequestCurrentPageData:totalData:url:)]) {
-//                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
+                    //                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
                     [self.lx_delegate lx_successRequestCurrentPageData:models totalData:self.lx_dataSourceArrM.copy url:url];
                 }
             }else {
@@ -460,7 +479,7 @@
                     [self.lx_dataSourceArrM addObjectsFromArray:arr];
                 }
                 if ([self.lx_delegate respondsToSelector:@selector(lx_successRequestCurrentPageData:totalData:url:)]) {
-//                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
+                    //                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
                     [self.lx_delegate lx_successRequestCurrentPageData:arr totalData:self.lx_dataSourceArrM.copy url:url];
                 }
             }
@@ -478,7 +497,9 @@
                 [self.lx_header endRefreshing];
             }
         }else {//非分页数据
-            [self.lx_header endRefreshing];
+            if (self.lx_header != nil) {
+                [self.lx_header endRefreshing];
+            }
             
             //解析数据
             Class cls = [self.lx_dataClassDictM objectForKey:url];
@@ -491,12 +512,12 @@
                 }
                 
                 if ([self.lx_delegate respondsToSelector:@selector(lx_successRequestData:url:)]) {
-//                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
+                    //                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
                     [self.lx_delegate lx_successRequestData:model url:url];
                 }
             }else {
                 if ([self.lx_delegate respondsToSelector:@selector(lx_successRequestData:url:)]) {
-//                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
+                    //                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
                     [self.lx_delegate lx_successRequestData:data url:url];
                 }
             }
@@ -505,14 +526,18 @@
 }
 ///网络链接错误
 - (void)lx_dealWithResponseTask:(NSURLSessionDataTask*)task error:(NSError*)error {
-    [self.lx_header endRefreshing];
-    [self.lx_footer endRefreshing];
+    if (self.lx_header != nil) {
+        [self.lx_header endRefreshing];
+    }
+    if (self.lx_footer != nil) {
+        [self.lx_footer endRefreshing];
+    }
     self.lx_current = self.lx_previous;
     
     NSString* url = task.originalRequest.URL.absoluteString;
     //判断是否是主动cancel的任务
     if (error.code == -999 || [error.localizedDescription isEqualToString:@"cancelled"]) {
-        NSLog(@"取消task导致的无效identifier=%tu",task.taskIdentifier);
+        //        NSLog(@"取消task导致的无效identifier=%tu",task.taskIdentifier);
         if ([self.lx_delegate respondsToSelector:@selector(lx_cancelTaskWithUrl:)]) {
             [self.lx_delegate lx_cancelTaskWithUrl:url];
         }
@@ -523,10 +548,10 @@
         if ([self.lx_delegate respondsToSelector:@selector(lx_cancelTaskWithUrl:)]) {
             [self.lx_delegate lx_cancelTaskWithUrl:url];
         }
-        NSLog(@"无效identifier=%tu",task.taskIdentifier);
+        //        NSLog(@"无效identifier=%tu",task.taskIdentifier);
         return;
     }
-
+    
     if ([self.lx_delegate respondsToSelector:@selector(lx_failRequestWithMessage:code:url:)]) {
         [self.lx_delegate lx_failRequestWithMessage:error.localizedDescription code:error.code url:url];
     }
@@ -545,7 +570,6 @@
 - (void)lx_requestData {
     [self lx_actionForStartRequestData];
 }
-
 #pragma mark --- 属性设置
 - (void)setLx_delegate:(id<LXNetworkConfigureProtocol>)lx_delegate {
     objc_setAssociatedObject(self, _cmd, lx_delegate, OBJC_ASSOCIATION_ASSIGN);

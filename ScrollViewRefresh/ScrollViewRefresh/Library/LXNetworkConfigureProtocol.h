@@ -67,7 +67,7 @@ typedef NS_ENUM(NSUInteger, LXRefreshOption) {
 ///响应分页数据实体的数组key值，默认是'records'
 - (nullable NSString*)lx_onePageDataArrName;
 
-///用于界面中有使用dispatch_group_t调度组的接口使用，避免高并发导致的group中的leave和enter个数不匹配。
+///无效的网络请求回调：用于界面中有使用dispatch_group_t调度组的接口使用，避免高并发导致的group中的leave和enter个数不匹配。
 - (void)lx_cancelTaskWithUrl:(nonnull NSString*)url;
 
 /**
