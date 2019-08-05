@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		4B7375B322F40EBA00DCC2CB /* LXStockModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7375B222F40EBA00DCC2CB /* LXStockModel.m */; };
 		4B8746D122F2CA680086090A /* LXHttpService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8746D022F2CA680086090A /* LXHttpService.m */; };
-		4B93713D22F52D84005C1BED /* UIView+Network.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B93713B22F51D9A005C1BED /* UIView+Network.m */; };
+		4B93713D22F52D84005C1BED /* UIView+LXNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B93713B22F51D9A005C1BED /* UIView+LXNetwork.m */; };
 		4BE2775222E72F4900083103 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE2775122E72F4900083103 /* AppDelegate.m */; };
 		4BE2775522E72F4900083103 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE2775422E72F4900083103 /* ViewController.m */; };
 		4BE2775822E72F4900083103 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4BE2775622E72F4900083103 /* Main.storyboard */; };
@@ -44,8 +44,8 @@
 		4B7375B222F40EBA00DCC2CB /* LXStockModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXStockModel.m; sourceTree = "<group>"; };
 		4B8746CF22F2CA680086090A /* LXHttpService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXHttpService.h; sourceTree = "<group>"; };
 		4B8746D022F2CA680086090A /* LXHttpService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXHttpService.m; sourceTree = "<group>"; };
-		4B93713A22F51D9A005C1BED /* UIView+Network.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+Network.h"; sourceTree = "<group>"; };
-		4B93713B22F51D9A005C1BED /* UIView+Network.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+Network.m"; sourceTree = "<group>"; };
+		4B93713A22F51D9A005C1BED /* UIView+LXNetwork.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+LXNetwork.h"; sourceTree = "<group>"; };
+		4B93713B22F51D9A005C1BED /* UIView+LXNetwork.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+LXNetwork.m"; sourceTree = "<group>"; };
 		4BE2774D22E72F4900083103 /* ScrollViewRefresh.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScrollViewRefresh.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BE2775022E72F4900083103 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		4BE2775122E72F4900083103 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -63,8 +63,6 @@
 		4BE2777422E72F4A00083103 /* ScrollViewRefreshUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScrollViewRefreshUITests.m; sourceTree = "<group>"; };
 		4BE2777622E72F4A00083103 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BE2778222E72F9500083103 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
-		4BE2778722E732DD00083103 /* UIScrollView+LXRefresh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+LXRefresh.h"; sourceTree = "<group>"; };
-		4BE2778822E732DD00083103 /* UIScrollView+LXRefresh.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+LXRefresh.m"; sourceTree = "<group>"; };
 		4BE2778A22E7333100083103 /* LXNetworkConfigureProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXNetworkConfigureProtocol.h; sourceTree = "<group>"; };
 		B279C2B8A5853BD00B576044 /* Pods-ScrollViewRefresh.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ScrollViewRefresh.debug.xcconfig"; path = "Target Support Files/Pods-ScrollViewRefresh/Pods-ScrollViewRefresh.debug.xcconfig"; sourceTree = "<group>"; };
 		D4E83898951F84543753574F /* Pods-ScrollViewRefresh.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ScrollViewRefresh.release.xcconfig"; path = "Target Support Files/Pods-ScrollViewRefresh/Pods-ScrollViewRefresh.release.xcconfig"; sourceTree = "<group>"; };
@@ -169,10 +167,8 @@
 		4BE2778322E732A400083103 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				4BE2778722E732DD00083103 /* UIScrollView+LXRefresh.h */,
-				4BE2778822E732DD00083103 /* UIScrollView+LXRefresh.m */,
-				4B93713A22F51D9A005C1BED /* UIView+Network.h */,
-				4B93713B22F51D9A005C1BED /* UIView+Network.m */,
+				4B93713A22F51D9A005C1BED /* UIView+LXNetwork.h */,
+				4B93713B22F51D9A005C1BED /* UIView+LXNetwork.m */,
 				4BE2778A22E7333100083103 /* LXNetworkConfigureProtocol.h */,
 			);
 			path = Library;
@@ -379,7 +375,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B93713D22F52D84005C1BED /* UIView+Network.m in Sources */,
+				4B93713D22F52D84005C1BED /* UIView+LXNetwork.m in Sources */,
 				4B7375B322F40EBA00DCC2CB /* LXStockModel.m in Sources */,
 				4BE2775522E72F4900083103 /* ViewController.m in Sources */,
 				4B8746D122F2CA680086090A /* LXHttpService.m in Sources */,

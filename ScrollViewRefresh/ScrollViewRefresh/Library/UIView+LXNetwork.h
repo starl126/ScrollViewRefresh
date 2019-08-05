@@ -1,8 +1,8 @@
 //
-//  UIScrollView+LXRefresh.h
+//  UIView+Network.h
 //  ScrollViewRefresh
 //
-//  Created by 天边的星星 on 2019/7/23.
+//  Created by 天边的星星 on 2019/8/3.
 //  Copyright © 2019 starxin. All rights reserved.
 //
 
@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UIScrollView (LXRefresh)
+@interface UIView (LXNetwork)
 
 ///设置代理，只有在代理不为nil时才能使用
 @property (nonatomic, weak) id<LXNetworkConfigureProtocol> lx_delegate;

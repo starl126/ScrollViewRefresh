@@ -6,8 +6,7 @@
 //  Copyright © 2019 starxin. All rights reserved.
 //
 
-#import "UIView+Network.h"
-#import "UIScrollView+LXRefresh.h"
+#import "UIView+LXNetwork.h"
 
 #define LXScrollSelf UIScrollView* scrollSelf = (UIScrollView*)self
 #define LXScrollWeakSelf __weak typeof(UIScrollView*) lx_scrollWeakSelf = (UIScrollView*)self
@@ -59,7 +58,7 @@
 
 @end
 
-@implementation UIView (Network)
+@implementation UIView (LXNetwork)
 
 #pragma mark --- 处理刷新
 - (void)lx_actionForDealWithRefresh {
@@ -173,9 +172,9 @@
         case LXMethodOptionPut:
         {
             NSURLSessionDataTask* task = [self.manager PUT:url parameters:parameter success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                
+                [lx_weakSelf lx_dealWithResponseDataTask:task responseObject:responseObject];
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                
+                [lx_weakSelf lx_dealWithResponseTask:task error:error];
             }];
             [self lx_cacheTask:task url:url];
             [self lx_cacheDataClassWithUrl:url];
@@ -184,9 +183,9 @@
         case LXMethodOptionDelete:
         {
             NSURLSessionDataTask* task = [self.manager DELETE:url parameters:parameter success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                
+                [lx_weakSelf lx_dealWithResponseDataTask:task responseObject:responseObject];
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                
+                [lx_weakSelf lx_dealWithResponseTask:task error:error];
             }];
             [self lx_cacheTask:task url:url];
             [self lx_cacheDataClassWithUrl:url];
@@ -445,6 +444,7 @@
             [self.lx_header endRefreshing];
             [self.lx_footer endRefreshing];
             
+            
             if ([self.lx_delegate respondsToSelector:@selector(lx_failRequestWithMessage:code:url:)]) {
                 [self.lx_delegate lx_failRequestWithMessage:msg code:code url:url];
             }
@@ -454,7 +454,6 @@
         if (isPageList) {//分页数据处理
             NSInteger current = [[data objectForKey:[self lx_currentName]] integerValue];
             NSInteger pages = [[data objectForKey:[self lx_totalPagesName]] integerValue];
-            self.lx_total = pages;
             
             NSArray* arr = [data objectForKey:[self lx_dataArrName]];
             //解析数据
@@ -495,7 +494,35 @@
                 [self.lx_footer endRefreshing];
                 [self.lx_footer resetNoMoreData];
                 [self.lx_header endRefreshing];
+                
+                BOOL twiceRequest = NO;
+                if ([self.lx_delegate respondsToSelector:@selector(lx_requestTwiceOneTime)]) {
+                    twiceRequest = [self.lx_delegate lx_requestTwiceOneTime];
+                }
+                if (twiceRequest) {
+                    if ([self isKindOfClass:UITableView.class]) {
+                        UITableView* tableSelf = (UITableView*)self;
+                        NSIndexPath* path = [tableSelf indexPathForRowAtPoint:CGPointMake(tableSelf.bounds.size.width*0.5, tableSelf.bounds.size.height*0.8)];
+                        if (path) {
+                            UITableViewCell* cell = [tableSelf cellForRowAtIndexPath:path];
+                            if (tableSelf.contentSize.height - cell.frame.origin.y <= tableSelf.bounds.size.height*0.5) {
+                                [self lx_actionForPullUpRefresh];
+                            }
+                        }
+                    }else if ([self isKindOfClass:UICollectionView.class]) {
+                        UICollectionView* collectionSelf = (UICollectionView*)self;
+                        NSIndexPath* path = [collectionSelf indexPathForItemAtPoint:CGPointMake(collectionSelf.bounds.size.width*0.5, collectionSelf.bounds.size.height*0.8)];
+                        if (path) {
+                            UICollectionViewCell* cell = [collectionSelf cellForItemAtIndexPath:path];
+                            if (collectionSelf.contentSize.height - cell.frame.origin.y <= collectionSelf.bounds.size.height*0.5) {
+                                [self lx_actionForPullUpRefresh];
+                            }
+                        }
+                    }else {
+                    }
+                }
             }
+            
         }else {//非分页数据
             if (self.lx_header != nil) {
                 [self.lx_header endRefreshing];
@@ -568,6 +595,9 @@
 
 #pragma mark --- public
 - (void)lx_requestData {
+    if ([self lx_isPageList]) {
+        
+    }
     [self lx_actionForStartRequestData];
 }
 #pragma mark --- 属性设置

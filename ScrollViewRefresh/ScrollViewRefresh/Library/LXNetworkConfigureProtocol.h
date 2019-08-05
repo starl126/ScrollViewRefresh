@@ -50,6 +50,9 @@ typedef NS_ENUM(NSUInteger, LXRefreshOption) {
 ///请求头的设置
 - (nullable NSDictionary*)lx_requestHeaderFiled;
 
+///针对列表数据，是否需要无感知加载(每次请求2次)
+- (BOOL)lx_requestTwiceOneTime;
+
 
 #pragma mark --- response
 ///数据对应的模型

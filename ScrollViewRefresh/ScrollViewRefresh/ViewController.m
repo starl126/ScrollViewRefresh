@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "Library/UIView+Network.h"
+#import "Library/UIView+LXNetwork.h"
 #import "LXStockModel.h"
 
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource,LXNetworkConfigureProtocol>
@@ -53,11 +53,7 @@
 
 #pragma mark --- LXNetworkConfigureProtocol
 - (NSString*)lx_url {
-    if (self.type) {
-        return @"http://app-test.qizhidao.com/qzd-bff-app/qzd/v1/policy/project/permit/declare/search";
-    }else {
-        return @"http://app-test.qizhidao.com/qzd-bff-app/qzd/v1/policy/project/permit/suitYou/search";
-    }
+
 }
 - (LXMethodOption)lx_methodOption {
     return LXMethodOptionPost;
