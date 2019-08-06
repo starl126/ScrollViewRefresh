@@ -596,7 +596,7 @@
 #pragma mark --- public
 - (void)lx_requestData {
     if ([self lx_isPageList]) {
-        
+        self.lx_current = 1;
     }
     [self lx_actionForStartRequestData];
 }
