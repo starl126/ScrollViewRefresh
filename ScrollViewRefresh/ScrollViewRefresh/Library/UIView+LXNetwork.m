@@ -55,6 +55,8 @@
 @property (nonatomic, strong) NSMutableDictionary* lx_dataClassDictM;
 ///缓存分页数据，用于多接口分页校正
 @property (nonatomic, strong) NSMutableDictionary* lx_isPageDictM;
+///是否在请求网络中
+@property (nonatomic, assign, getter=isRequesting) BOOL requesting;
 
 @end
 
@@ -65,6 +67,7 @@
     if (![self isKindOfClass:UIScrollView.class]) {
         return;
     }
+    
     if ([self.lx_delegate respondsToSelector:@selector(lx_refreshOption)]) {
         LXRefreshOption opt = [self.lx_delegate lx_refreshOption];
         LXScrollSelf;
@@ -85,10 +88,11 @@
                 MJRefreshBackNormalFooter* footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
                     [lx_weakSelf lx_actionForPullUpRefresh];
                 }];
-                footer.stateLabel.hidden = YES;
+                
                 [footer endRefreshingWithNoMoreData];
                 scrollSelf.mj_footer = footer;
                 scrollSelf.lx_footer = footer;
+                [self lx_hideFooterView:YES];
             }
                 break;
             case LXRefreshOptionHeaderFooter:
@@ -101,15 +105,23 @@
                 MJRefreshBackNormalFooter* footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
                     [lx_weakSelf lx_actionForPullUpRefresh];
                 }];
-                footer.stateLabel.hidden = YES;
+                
                 [footer endRefreshingWithNoMoreData];
                 scrollSelf.mj_footer = footer;
                 scrollSelf.lx_footer = footer;
+                [self lx_hideFooterView:YES];
             }
                 break;
             default:
                 break;
         }
+    }
+    if ([self.lx_delegate respondsToSelector:@selector(lx_requestTwiceOneTime)] &&
+        [self.lx_delegate lx_requestTwiceOneTime] &&
+        self.lx_footer) {
+        
+        UIScrollView* scrollSelf = (UIScrollView*)self;
+        [scrollSelf addObserver:scrollSelf forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:NULL];
     }
 }
 ///下拉刷新
@@ -134,6 +146,9 @@
         [scrollSelf.mj_footer endRefreshingWithNoMoreData];
         return;
     }
+    if (self.requesting) {
+        return;
+    }
     scrollSelf.lx_current++;
     [scrollSelf lx_actionForStartRequestData];
 }
@@ -143,6 +158,7 @@
     NSString* url = [self lx_checkedUrl];
     [self lx_cacheIsPageWithUrl:url];
     id parameter = [self lx_checkedParameter];
+    self.requesting = YES;
     
     LXWeakSelf;
     switch (method) {
@@ -243,8 +259,9 @@
         self.manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/html",@"text/json",@"text/javascript",@"text/plain", @"image/jpeg",nil];
         self.manager.requestSerializer = [AFJSONRequestSerializer serializer];
         
-        [self.manager.requestSerializer setValue:@"2383008733b63a519e9ff7efcbc28960.3LqIwOst17" forHTTPHeaderField:@"signature"];
-        NSString* token = @"eyJhbGciOiJIUzUxMiIsInppcCI6IkRFRiJ9.eNpkzkkOwjAMheG7eN1IcexETm_AMTI0IogO0FZiEHcn6oINW-vT__yGuq7Qw62-zjWHGTqoYYMerWNnmRA7CHtuAkUTMYnWtqHLVtutkKTCYVAps1bMJikRiUqblErGYNjGhofHchQdiTmK6x7_ilMsv1n0DS3XsJX5PkKvO0jzuITpeWqfiBjUFsU7suS9k88XAAD__w.PeiOwtUlVNZYy4Z9e4XwBRs9VYDJzJRYy58ksyV-WRa1_SZQfdCxTObSFPzooM4gaNpmpeQbZuieDPk7ZFQ0kQ";
+        [self.manager.requestSerializer setValue:@"7797c4994be4d8e1ed91452ecf2ca425.SwqIAI1167" forHTTPHeaderField:@"signature"];
+        NSString* token = @"eyJhbGciOiJIUzUxMiIsInppcCI6IkRFRiJ9.eNpkzkkOwjAMheG7eN1IzuDU6Q04htOmIogOkFZiEHcn6oINW-vT__yGXAp0cMuvcx5kgQaybNBp8mQsOuQGZB-q0IzWOsuIVNFly_XGQapySQn1rJwWrWIbWmWwF9eGRJhixemxHkUfiI9i2eNfcY7jb9ZwRetVtnG5T9BhA_0yrTI_T_UTZqORNAdvyYbg-fMFAAD__w.n2lS40wqyGypLxFukz62aWgaPZqiYLGJCoUYjiESZ_8zlvJlnDGXNrQTsMrtuOvD5RVg0lvcJPDNV3gyT8Qumw";
+        
         [self.manager.requestSerializer setValue:token forHTTPHeaderField:@"accessToken"];
     });
 }
@@ -368,21 +385,12 @@
 ///缓存task处理
 - (void)lx_cacheTask:(NSURLSessionDataTask*)task url:(NSString*)url  {
     LXTaskManagerModel* existModel = nil;
-    __weak typeof(self) lx_weakSelf = self;
     
     for (LXTaskManagerModel* model in self.lx_taskArrM) {
         if ([model.url isEqualToString:url]) {
             model.latestIdentifier = task.taskIdentifier;
-            
-            BOOL needCancelTaskAction = NO;
-            if ([lx_weakSelf.lx_delegate respondsToSelector:@selector(lx_cancelTaskWithUrl:)]) {
-                needCancelTaskAction = YES;
-            }
             [model.taskArrM enumerateObjectsUsingBlock:^(NSURLSessionDataTask * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 [obj cancel];
-                if (needCancelTaskAction) {
-                    [lx_weakSelf.lx_delegate lx_cancelTaskWithUrl:url];
-                }
             }];
             [model.taskArrM removeAllObjects];
             existModel = model;
@@ -390,10 +398,10 @@
         }
     }
     if (existModel) {
-        NSLog(@"count=%tu",existModel.taskArrM.count);
+//        NSLog(@"count=%tu",existModel.taskArrM.count);
         [existModel.taskArrM addObject:task];
     }else {
-        NSLog(@"count=%tu",existModel.taskArrM.count);
+//        NSLog(@"count=%tu",existModel.taskArrM.count);
         LXTaskManagerModel* taskModel = [[LXTaskManagerModel alloc] initWithUrl:url identifier:task.taskIdentifier taskArr:@[task]];
         [self.lx_taskArrM addObject:taskModel];
     }
@@ -422,6 +430,24 @@
     }
     [self.lx_isPageDictM setObject:@(isPage) forKey:url];
 }
+///观察scroll view的contentOffset
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    if ([keyPath isEqualToString:@"contentOffset"]) {
+        CGPoint point = [change[@"new"] CGPointValue];
+        if (!CGPointEqualToPoint(point, CGPointZero) &&
+            ((UIScrollView*)self).contentSize.height != 0) {
+//            NSLog(@"point = %@---%.2f---%.2f", NSStringFromCGPoint(point),self.bounds.size.height,((UIScrollView*)self).contentSize.height);
+            BOOL position = point.y + self.bounds.size.height*1.3 > ((UIScrollView*)self).contentSize.height;
+            if (position && !self.isRequesting) {
+                [self lx_actionForPullUpRefresh];
+            }
+        }
+    }
+}
+///是否隐藏footer view
+- (void)lx_hideFooterView:(BOOL)hide {
+    self.lx_footer.hidden = hide;
+}
 ///请求成功网络数据处理
 - (void)lx_dealWithResponseDataTask:(NSURLSessionDataTask*)task responseObject:(id)responseObject {
     NSString* url = task.response.URL.absoluteString;
@@ -431,10 +457,11 @@
         if ([self.lx_delegate respondsToSelector:@selector(lx_cancelTaskWithUrl:)]) {
             [self.lx_delegate lx_cancelTaskWithUrl:url];
         }
-        NSLog(@"无效identifier=%tu",task.taskIdentifier);
+//        NSLog(@"无效identifier=%tu",task.taskIdentifier);
         return;
     }
     
+    self.requesting = NO;
     if (responseObject) {
         NSInteger code = [responseObject[@"code"] integerValue];
         NSString* msg  = responseObject[@"msg"];
@@ -443,7 +470,6 @@
             self.lx_current = self.lx_previous;
             [self.lx_header endRefreshing];
             [self.lx_footer endRefreshing];
-            
             
             if ([self.lx_delegate respondsToSelector:@selector(lx_failRequestWithMessage:code:url:)]) {
                 [self.lx_delegate lx_failRequestWithMessage:msg code:code url:url];
@@ -486,7 +512,7 @@
             self.lx_total = pages;
             self.lx_previous = self.lx_current;
             
-            self.lx_footer.stateLabel.hidden = NO;
+            [self lx_hideFooterView:NO];
             if (current >= pages) {
                 [self.lx_footer endRefreshingWithNoMoreData];
                 [self.lx_header endRefreshing];
@@ -494,33 +520,6 @@
                 [self.lx_footer endRefreshing];
                 [self.lx_footer resetNoMoreData];
                 [self.lx_header endRefreshing];
-                
-                BOOL twiceRequest = NO;
-                if ([self.lx_delegate respondsToSelector:@selector(lx_requestTwiceOneTime)]) {
-                    twiceRequest = [self.lx_delegate lx_requestTwiceOneTime];
-                }
-                if (twiceRequest) {
-                    if ([self isKindOfClass:UITableView.class]) {
-                        UITableView* tableSelf = (UITableView*)self;
-                        NSIndexPath* path = [tableSelf indexPathForRowAtPoint:CGPointMake(tableSelf.bounds.size.width*0.5, tableSelf.bounds.size.height*0.8)];
-                        if (path) {
-                            UITableViewCell* cell = [tableSelf cellForRowAtIndexPath:path];
-                            if (tableSelf.contentSize.height - cell.frame.origin.y <= tableSelf.bounds.size.height*0.5) {
-                                [self lx_actionForPullUpRefresh];
-                            }
-                        }
-                    }else if ([self isKindOfClass:UICollectionView.class]) {
-                        UICollectionView* collectionSelf = (UICollectionView*)self;
-                        NSIndexPath* path = [collectionSelf indexPathForItemAtPoint:CGPointMake(collectionSelf.bounds.size.width*0.5, collectionSelf.bounds.size.height*0.8)];
-                        if (path) {
-                            UICollectionViewCell* cell = [collectionSelf cellForItemAtIndexPath:path];
-                            if (collectionSelf.contentSize.height - cell.frame.origin.y <= collectionSelf.bounds.size.height*0.5) {
-                                [self lx_actionForPullUpRefresh];
-                            }
-                        }
-                    }else {
-                    }
-                }
             }
             
         }else {//非分页数据
@@ -578,7 +577,7 @@
         //        NSLog(@"无效identifier=%tu",task.taskIdentifier);
         return;
     }
-    
+    self.requesting = NO;
     if ([self.lx_delegate respondsToSelector:@selector(lx_failRequestWithMessage:code:url:)]) {
         [self.lx_delegate lx_failRequestWithMessage:error.localizedDescription code:error.code url:url];
     }
@@ -682,6 +681,21 @@
 }
 - (NSMutableDictionary *)lx_isPageDictM {
     return objc_getAssociatedObject(self, @selector(setLx_isPageDictM:));
+}
+- (void)setRequesting:(BOOL)requesting {
+    objc_setAssociatedObject(self, _cmd, @(requesting), OBJC_ASSOCIATION_ASSIGN);
+}
+- (BOOL)isRequesting {
+    return [objc_getAssociatedObject(self, @selector(setRequesting:)) boolValue];
+}
+
+- (void)dealloc {
+    if ([self.lx_delegate respondsToSelector:@selector(lx_requestTwiceOneTime)] &&
+        [self.lx_delegate lx_requestTwiceOneTime] &&
+        self.lx_footer) {
+        
+        [self removeObserver:self forKeyPath:@"contentOffset"];
+    }
 }
 
 @end

@@ -39,7 +39,7 @@ typedef NS_ENUM(NSUInteger, LXRefreshOption) {
 ///是否是分页数据,默认是NO
 - (BOOL)lx_isPageData;
 
-///网络请求的参数
+///网络请求的参数'
 - (nullable id)lx_parameters;
 
 ///针对分页数据，每页请求的条数,若没有设置则默认10条
@@ -70,7 +70,7 @@ typedef NS_ENUM(NSUInteger, LXRefreshOption) {
 ///响应分页数据实体的数组key值，默认是'records'
 - (nullable NSString*)lx_onePageDataArrName;
 
-///无效的网络请求回调：用于界面中有使用dispatch_group_t调度组的接口使用，避免高并发导致的group中的leave和enter个数不匹配。
+///当前时刻一切无效的网络请求(成功或者失败)回调，用于高并发可能导致的接口重复调用。
 - (void)lx_cancelTaskWithUrl:(nonnull NSString*)url;
 
 /**

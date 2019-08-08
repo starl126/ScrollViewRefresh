@@ -10,7 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface LXStockModel : NSObject
+@interface LXStockModel : NSObject {
+    NSString* _applyTime;
+}
 
 ///项目主标题
 @property (nonatomic, copy) NSString* projectName;

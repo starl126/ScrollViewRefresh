@@ -10,4 +10,11 @@
 
 @implementation LXStockModel
 
+- (void)setApplyTime:(NSString *)applyTime {
+    _applyTime = applyTime.copy;
+}
+- (NSString *)applyTime {
+    return _applyTime;
+}
+
 @end
