@@ -9,10 +9,11 @@
 #import "ViewController.h"
 #import "Library/UIView+LXNetwork.h"
 #import "LXStockModel.h"
+#import "LXScrollView.h"
 
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource,LXNetworkConfigureProtocol>
 
-@property (nonatomic, strong) UITableView* tableView;
+@property (nonatomic, strong) LXScrollView* tableView;
 @property (nonatomic, assign) NSUInteger type;
 
 @property (nonatomic, copy) NSString* name;
@@ -28,11 +29,12 @@
 @implementation ViewController
 
 @synthesize date = _date, firstName = _firstName, name = _name;
+void instrumentObjcMessageSends(BOOL flag);
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = UIColor.whiteColor;
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(20, 200, 300, 300) style:UITableViewStylePlain];
+    self.tableView = [[LXScrollView alloc] initWithFrame:CGRectMake(20, 200, 300, 300) style:UITableViewStylePlain];
     [self.tableView registerClass:UITableViewCell.class forCellReuseIdentifier:NSStringFromClass(UITableViewCell.class)];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -40,15 +42,19 @@
     [self.view addSubview:self.tableView];
     self.tableView.lx_delegate = self;
     [self.tableView lx_requestData];
+    instrumentObjcMessageSends(YES);
 }
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    for (int i=0; i<40; i++) {
-        self.type = i%2;
-        [self.tableView lx_requestData];
-    }
+//    for (int i=0; i<40; i++) {
+//        self.type = i%2;
+//        [self.tableView lx_requestData];
+//    }
 //    self.date = @"sss";
 //    NSLog(@"%@", self.date);
 //    NSLog(@"---%@", NSObject.superclass);
+//    [self performSelector:@selector(big:) withObject:nil afterDelay:0];
+//    [self removeObserver:nil forKeyPath:@"name"];
+    
 }
 
 - (void)setName:(NSString *)name {
@@ -74,11 +80,7 @@
 
 #pragma mark --- LXNetworkConfigureProtocol
 - (NSString*)lx_url {
-//    if (self.type) {
-        return @"http://app-test.qizhidao.com/qzd-bff-app/qzd/v1/policy/project/permit/declare/search";
-//    }else {
-//        return @"http://app-test.qizhidao.com/qzd-bff-app/qzd/v1/policy/project/permit/suitYou/search";
-//    }
+    return nil;
 }
 - (LXMethodOption)lx_methodOption {
     return LXMethodOptionPost;
@@ -122,18 +124,18 @@
 }
 - (void)lx_successRequestData:(nullable id)responseData url:(NSString*)url {
 //    NSLog(@"11111---%@---%@", responseData,url);
-    NSLog(@"11111---%@", url);
+//    NSLog(@"11111---%@", url);
 }
 - (void)lx_failRequestWithMessage:(nullable NSString*)msg code:(NSInteger)code url:(NSString*)url {
-    NSLog(@"22222---%@---%tu---%@",msg,code,url);
+//    NSLog(@"22222---%@---%tu---%@",msg,code,url);
 }
 - (void)lx_successRequestCurrentPageData:(nullable NSArray*)curArr totalData:(nullable NSArray*)totalArr url:(nonnull NSString*)url {
 //    NSLog(@"11111---%@---%@---%@", curArr,totalArr,url);
-    NSLog(@"11111---%@", url);
+//    NSLog(@"11111---%@", url);
     [self.tableView reloadData];
 }
 - (void)lx_cancelTaskWithUrl:(nonnull NSString*)url {
-    NSLog(@"lx_cancelTaskWithUrl---%@",url);
+//    NSLog(@"lx_cancelTaskWithUrl---%@",url);
 }
 
 @end

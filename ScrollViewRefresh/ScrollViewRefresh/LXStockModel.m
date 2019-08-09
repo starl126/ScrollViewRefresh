@@ -10,6 +10,13 @@
 
 @implementation LXStockModel
 
+- (instancetype)init {
+    if (self = [super init]) {
+//        NSLog(@"111-%@", NSStringFromClass(self.class));
+//        NSLog(@"222-%@", NSStringFromClass(super.class));
+    }
+    return self;
+}
 - (void)setApplyTime:(NSString *)applyTime {
     _applyTime = applyTime.copy;
 }

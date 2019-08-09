@@ -7,6 +7,7 @@
 //
 
 #import "UIView+LXNetwork.h"
+#import "LXObserver.h"
 
 #define LXScrollSelf UIScrollView* scrollSelf = (UIScrollView*)self
 #define LXScrollWeakSelf __weak typeof(UIScrollView*) lx_scrollWeakSelf = (UIScrollView*)self
@@ -57,6 +58,8 @@
 @property (nonatomic, strong) NSMutableDictionary* lx_isPageDictM;
 ///是否在请求网络中
 @property (nonatomic, assign, getter=isRequesting) BOOL requesting;
+
+@property (nonatomic, strong) LXObserver* obv;
 
 @end
 
@@ -120,8 +123,10 @@
         [self.lx_delegate lx_requestTwiceOneTime] &&
         self.lx_footer) {
         
-        UIScrollView* scrollSelf = (UIScrollView*)self;
-        [scrollSelf addObserver:scrollSelf forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:NULL];
+//        UIScrollView* scrollSelf = (UIScrollView*)self;
+//        [scrollSelf addObserver:scrollSelf forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:NULL];
+//        [self.obv addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:NULL];
+        self.obv.obv = self;
     }
 }
 ///下拉刷新
@@ -181,7 +186,8 @@
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                 [lx_weakSelf lx_dealWithResponseTask:task error:error];
             }];
-            [self lx_cacheTask:task url:url];
+            NSLog(@"----%@", self.manager);
+            [self lx_cacheTask:task.copy url:url];
             [self lx_cacheDataClassWithUrl:url];
         }
             break;
@@ -213,8 +219,6 @@
 }
 - (void)lx_sessionManager {
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
         config.timeoutIntervalForRequest = 20;
         self.manager = [[AFHTTPSessionManager alloc] initWithBaseURL:nil sessionConfiguration:config];
@@ -263,7 +267,6 @@
         NSString* token = @"eyJhbGciOiJIUzUxMiIsInppcCI6IkRFRiJ9.eNpkzkkOwjAMheG7eN1IzuDU6Q04htOmIogOkFZiEHcn6oINW-vT__yGXAp0cMuvcx5kgQaybNBp8mQsOuQGZB-q0IzWOsuIVNFly_XGQapySQn1rJwWrWIbWmWwF9eGRJhixemxHkUfiI9i2eNfcY7jb9ZwRetVtnG5T9BhA_0yrTI_T_UTZqORNAdvyYbg-fMFAAD__w.n2lS40wqyGypLxFukz62aWgaPZqiYLGJCoUYjiESZ_8zlvJlnDGXNrQTsMrtuOvD5RVg0lvcJPDNV3gyT8Qumw";
         
         [self.manager.requestSerializer setValue:token forHTTPHeaderField:@"accessToken"];
-    });
 }
 
 #pragma mark --- private
@@ -431,19 +434,19 @@
     [self.lx_isPageDictM setObject:@(isPage) forKey:url];
 }
 ///观察scroll view的contentOffset
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-    if ([keyPath isEqualToString:@"contentOffset"]) {
-        CGPoint point = [change[@"new"] CGPointValue];
-        if (!CGPointEqualToPoint(point, CGPointZero) &&
-            ((UIScrollView*)self).contentSize.height != 0) {
-//            NSLog(@"point = %@---%.2f---%.2f", NSStringFromCGPoint(point),self.bounds.size.height,((UIScrollView*)self).contentSize.height);
-            BOOL position = point.y + self.bounds.size.height*1.3 > ((UIScrollView*)self).contentSize.height;
-            if (position && !self.isRequesting) {
-                [self lx_actionForPullUpRefresh];
-            }
-        }
-    }
-}
+//- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+//    if ([keyPath isEqualToString:@"contentOffset"]) {
+//        CGPoint point = [change[@"new"] CGPointValue];
+//        if (!CGPointEqualToPoint(point, CGPointZero) &&
+//            ((UIScrollView*)self).contentSize.height != 0) {
+////            NSLog(@"point = %@---%.2f---%.2f", NSStringFromCGPoint(point),self.bounds.size.height,((UIScrollView*)self).contentSize.height);
+//            BOOL position = point.y + self.bounds.size.height*1.3 > ((UIScrollView*)self).contentSize.height;
+//            if (position && !self.isRequesting) {
+//                [self lx_actionForPullUpRefresh];
+//            }
+//        }
+//    }
+//}
 ///是否隐藏footer view
 - (void)lx_hideFooterView:(BOOL)hide {
     self.lx_footer.hidden = hide;
@@ -590,6 +593,7 @@
     self.lx_dataClassDictM = [NSMutableDictionary dictionary];
     self.lx_dataSourceArrM = [NSMutableArray array];
     self.lx_isPageDictM    = [NSMutableDictionary dictionary];
+    self.obv = [LXObserver new];
 }
 
 #pragma mark --- public
@@ -611,6 +615,7 @@
         [self lx_actionForDealWithRefresh];
         //初始化数据
         [self lx_initConfigure];
+        self.obv.obv = self;
     }
 }
 - (id<LXNetworkConfigureProtocol>)lx_delegate {
@@ -688,14 +693,20 @@
 - (BOOL)isRequesting {
     return [objc_getAssociatedObject(self, @selector(setRequesting:)) boolValue];
 }
-
-- (void)dealloc {
-    if ([self.lx_delegate respondsToSelector:@selector(lx_requestTwiceOneTime)] &&
-        [self.lx_delegate lx_requestTwiceOneTime] &&
-        self.lx_footer) {
-        
-        [self removeObserver:self forKeyPath:@"contentOffset"];
-    }
+- (void)setObv:(LXObserver *)obv {
+    objc_setAssociatedObject(self, _cmd, obv, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
+- (LXObserver *)obv {
+    return objc_getAssociatedObject(self, @selector(setObv:));
+}
+
+//- (void)dealloc {
+//    if ([self.lx_delegate respondsToSelector:@selector(lx_requestTwiceOneTime)] &&
+//        [self.lx_delegate lx_requestTwiceOneTime] &&
+//        self.lx_footer) {
+//
+//        [self removeObserver:self forKeyPath:@"contentOffset"];
+//    }
+//}
 
 @end
