@@ -7,13 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4B15AFB122FD0C6C004AE15A /* LXNewsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B15AFB022FD0C6C004AE15A /* LXNewsModel.m */; };
+		4B15AFB522FD21AD004AE15A /* LXNonPageSingleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B15AFB422FD21AD004AE15A /* LXNonPageSingleController.m */; };
+		4B15AFB822FD21D5004AE15A /* LXNonPageMoreController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B15AFB722FD21D5004AE15A /* LXNonPageMoreController.m */; };
+		4B15AFBB22FD21F2004AE15A /* LXPageSingleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B15AFBA22FD21F2004AE15A /* LXPageSingleController.m */; };
+		4B15AFBE22FD2215004AE15A /* LXBothSingleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B15AFBD22FD2215004AE15A /* LXBothSingleController.m */; };
+		4B15AFC122FD2223004AE15A /* LXBothMoreController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B15AFC022FD2223004AE15A /* LXBothMoreController.m */; };
+		4B15AFC422FD58C6004AE15A /* LXHotNovelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B15AFC322FD58C6004AE15A /* LXHotNovelCell.m */; };
 		4B71328D22FC4C3D0050A543 /* LXAgencyObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B71328C22FC4C3D0050A543 /* LXAgencyObserver.m */; };
-		4B71329022FC4E530050A543 /* LXViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B71328F22FC4E530050A543 /* LXViewController.m */; };
-		4B71329322FC520F0050A543 /* LXScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B71329222FC520F0050A543 /* LXScrollView.m */; };
 		4B93713D22F52D84005C1BED /* UIView+LXNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B93713B22F51D9A005C1BED /* UIView+LXNetwork.m */; };
 		4BE2775222E72F4900083103 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE2775122E72F4900083103 /* AppDelegate.m */; };
-		4BE2775522E72F4900083103 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE2775422E72F4900083103 /* ViewController.m */; };
 		4BE2775822E72F4900083103 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4BE2775622E72F4900083103 /* Main.storyboard */; };
 		4BE2775A22E72F4A00083103 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BE2775922E72F4A00083103 /* Assets.xcassets */; };
 		4BE2775D22E72F4A00083103 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4BE2775B22E72F4A00083103 /* LaunchScreen.storyboard */; };
@@ -42,21 +44,25 @@
 
 /* Begin PBXFileReference section */
 		4AB981EC2EB8F96D243C8CE3 /* Pods_ScrollViewRefresh.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ScrollViewRefresh.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B15AFAF22FD0C6C004AE15A /* LXNewsModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXNewsModel.h; sourceTree = "<group>"; };
-		4B15AFB022FD0C6C004AE15A /* LXNewsModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXNewsModel.m; sourceTree = "<group>"; };
+		4B15AFB322FD21AD004AE15A /* LXNonPageSingleController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXNonPageSingleController.h; sourceTree = "<group>"; };
+		4B15AFB422FD21AD004AE15A /* LXNonPageSingleController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXNonPageSingleController.m; sourceTree = "<group>"; };
+		4B15AFB622FD21D5004AE15A /* LXNonPageMoreController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXNonPageMoreController.h; sourceTree = "<group>"; };
+		4B15AFB722FD21D5004AE15A /* LXNonPageMoreController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXNonPageMoreController.m; sourceTree = "<group>"; };
+		4B15AFB922FD21F2004AE15A /* LXPageSingleController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXPageSingleController.h; sourceTree = "<group>"; };
+		4B15AFBA22FD21F2004AE15A /* LXPageSingleController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXPageSingleController.m; sourceTree = "<group>"; };
+		4B15AFBC22FD2215004AE15A /* LXBothSingleController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXBothSingleController.h; sourceTree = "<group>"; };
+		4B15AFBD22FD2215004AE15A /* LXBothSingleController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXBothSingleController.m; sourceTree = "<group>"; };
+		4B15AFBF22FD2223004AE15A /* LXBothMoreController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXBothMoreController.h; sourceTree = "<group>"; };
+		4B15AFC022FD2223004AE15A /* LXBothMoreController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXBothMoreController.m; sourceTree = "<group>"; };
+		4B15AFC222FD58C6004AE15A /* LXHotNovelCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXHotNovelCell.h; sourceTree = "<group>"; };
+		4B15AFC322FD58C6004AE15A /* LXHotNovelCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXHotNovelCell.m; sourceTree = "<group>"; };
 		4B71328B22FC4C3D0050A543 /* LXAgencyObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXAgencyObserver.h; sourceTree = "<group>"; };
 		4B71328C22FC4C3D0050A543 /* LXAgencyObserver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXAgencyObserver.m; sourceTree = "<group>"; };
-		4B71328E22FC4E530050A543 /* LXViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXViewController.h; sourceTree = "<group>"; };
-		4B71328F22FC4E530050A543 /* LXViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXViewController.m; sourceTree = "<group>"; };
-		4B71329122FC520F0050A543 /* LXScrollView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXScrollView.h; sourceTree = "<group>"; };
-		4B71329222FC520F0050A543 /* LXScrollView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXScrollView.m; sourceTree = "<group>"; };
 		4B93713A22F51D9A005C1BED /* UIView+LXNetwork.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+LXNetwork.h"; sourceTree = "<group>"; };
 		4B93713B22F51D9A005C1BED /* UIView+LXNetwork.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+LXNetwork.m"; sourceTree = "<group>"; };
 		4BE2774D22E72F4900083103 /* ScrollViewRefresh.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScrollViewRefresh.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BE2775022E72F4900083103 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		4BE2775122E72F4900083103 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		4BE2775322E72F4900083103 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		4BE2775422E72F4900083103 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		4BE2775722E72F4900083103 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4BE2775922E72F4A00083103 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4BE2775C22E72F4A00083103 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -100,6 +106,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4B15AFB222FD2135004AE15A /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				4B15AFB322FD21AD004AE15A /* LXNonPageSingleController.h */,
+				4B15AFB422FD21AD004AE15A /* LXNonPageSingleController.m */,
+				4B15AFB622FD21D5004AE15A /* LXNonPageMoreController.h */,
+				4B15AFB722FD21D5004AE15A /* LXNonPageMoreController.m */,
+				4B15AFB922FD21F2004AE15A /* LXPageSingleController.h */,
+				4B15AFBA22FD21F2004AE15A /* LXPageSingleController.m */,
+				4B15AFBC22FD2215004AE15A /* LXBothSingleController.h */,
+				4B15AFBD22FD2215004AE15A /* LXBothSingleController.m */,
+				4B15AFBF22FD2223004AE15A /* LXBothMoreController.h */,
+				4B15AFC022FD2223004AE15A /* LXBothMoreController.m */,
+				4B15AFC222FD58C6004AE15A /* LXHotNovelCell.h */,
+				4B15AFC322FD58C6004AE15A /* LXHotNovelCell.m */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
 		4BE2774422E72F4900083103 = {
 			isa = PBXGroup;
 			children = (
@@ -126,16 +151,9 @@
 			isa = PBXGroup;
 			children = (
 				4BE2778322E732A400083103 /* Library */,
+				4B15AFB222FD2135004AE15A /* Demo */,
 				4BE2775022E72F4900083103 /* AppDelegate.h */,
 				4BE2775122E72F4900083103 /* AppDelegate.m */,
-				4BE2775322E72F4900083103 /* ViewController.h */,
-				4BE2775422E72F4900083103 /* ViewController.m */,
-				4B71329122FC520F0050A543 /* LXScrollView.h */,
-				4B71329222FC520F0050A543 /* LXScrollView.m */,
-				4B71328E22FC4E530050A543 /* LXViewController.h */,
-				4B71328F22FC4E530050A543 /* LXViewController.m */,
-				4B15AFAF22FD0C6C004AE15A /* LXNewsModel.h */,
-				4B15AFB022FD0C6C004AE15A /* LXNewsModel.m */,
 				4BE2775622E72F4900083103 /* Main.storyboard */,
 				4BE2775922E72F4A00083103 /* Assets.xcassets */,
 				4BE2775B22E72F4A00083103 /* LaunchScreen.storyboard */,
@@ -355,6 +373,7 @@
 				"${PODS_ROOT}/Target Support Files/Pods-ScrollViewRefresh/Pods-ScrollViewRefresh-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
 				"${BUILT_PRODUCTS_DIR}/MJRefresh/MJRefresh.framework",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/YYModel/YYModel.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -363,6 +382,7 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRefresh.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYModel.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -377,14 +397,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B71329022FC4E530050A543 /* LXViewController.m in Sources */,
+				4B15AFB522FD21AD004AE15A /* LXNonPageSingleController.m in Sources */,
+				4B15AFBE22FD2215004AE15A /* LXBothSingleController.m in Sources */,
 				4B93713D22F52D84005C1BED /* UIView+LXNetwork.m in Sources */,
-				4B15AFB122FD0C6C004AE15A /* LXNewsModel.m in Sources */,
-				4BE2775522E72F4900083103 /* ViewController.m in Sources */,
+				4B15AFC122FD2223004AE15A /* LXBothMoreController.m in Sources */,
+				4B15AFB822FD21D5004AE15A /* LXNonPageMoreController.m in Sources */,
+				4B15AFC422FD58C6004AE15A /* LXHotNovelCell.m in Sources */,
 				4BE2776022E72F4A00083103 /* main.m in Sources */,
+				4B15AFBB22FD21F2004AE15A /* LXPageSingleController.m in Sources */,
 				4B71328D22FC4C3D0050A543 /* LXAgencyObserver.m in Sources */,
 				4BE2775222E72F4900083103 /* AppDelegate.m in Sources */,
-				4B71329322FC520F0050A543 /* LXScrollView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

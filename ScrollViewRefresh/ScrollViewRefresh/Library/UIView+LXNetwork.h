@@ -6,7 +6,6 @@
 //  Copyright © 2019 starxin. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import "LXNetworkConfigureProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN

@@ -15,25 +15,30 @@ PODS:
   - AFNetworking/UIKit (3.2.1):
     - AFNetworking/NSURLSession
   - MJRefresh (3.1.16)
+  - SDWebImage (4.4.6):
+    - SDWebImage/Core (= 4.4.6)
+  - SDWebImage/Core (4.4.6)
   - YYModel (1.0.4)
 
 DEPENDENCIES:
   - AFNetworking (~> 3.2.0)
   - MJRefresh (~> 3.1.15)
+  - SDWebImage
   - YYModel
-  - YYModel (~> 1.0.4)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AFNetworking
     - MJRefresh
+    - SDWebImage
     - YYModel
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   MJRefresh: 7798e16e53a5ef7f332dd05b27664db4e29530fd
+  SDWebImage: 3f3f0c02f09798048c47a5ed0a13f17b063572d8
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
 
-PODFILE CHECKSUM: 571e9da0c463af0229e6814540322b79d294828c
+PODFILE CHECKSUM: 2f8f8de414a76d378337bb12b0226262c2cf3206
 
 COCOAPODS: 1.6.1

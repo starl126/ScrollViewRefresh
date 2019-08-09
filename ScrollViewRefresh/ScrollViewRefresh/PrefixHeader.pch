@@ -14,6 +14,8 @@
     #import <MJRefresh/MJRefresh.h>
     #import <AFNetworking/AFNetworking.h>
     #import <YYModel/YYModel.h>
+    #import "Library/UIView+LXNetwork.h"
+    #import <UIImageView+WebCache.h>
 #if DEBUG
     #define NSLog(fmt, ...) NSLog((@"文件名:%@, 方法名:%s, 行数:%d, 打印内容:" fmt), [NSString stringWithUTF8String:__FILE__].lastPathComponent, __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 #else

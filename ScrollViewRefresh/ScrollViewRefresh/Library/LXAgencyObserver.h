@@ -6,8 +6,6 @@
 //  Copyright © 2019 starxin. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 NS_ASSUME_NONNULL_BEGIN
 ///代理观察者
 @interface LXAgencyObserver : NSObject

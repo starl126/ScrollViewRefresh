@@ -5,8 +5,9 @@ use_frameworks!
 target 'ScrollViewRefresh' do
 
     pod 'AFNetworking', '~> 3.2.0'
-    pod 'YYModel', '~> 1.0.4'
+    pod 'YYModel'
     pod 'MJRefresh', '~> 3.1.15'
     pod 'YYModel'
+    pod 'SDWebImage'
 
 end

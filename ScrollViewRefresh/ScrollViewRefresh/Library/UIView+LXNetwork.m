@@ -262,11 +262,6 @@
         // set responseSerializer's types
         self.manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/html",@"text/json",@"text/javascript",@"text/plain", @"image/jpeg",nil];
         self.manager.requestSerializer = [AFJSONRequestSerializer serializer];
-        
-        [self.manager.requestSerializer setValue:@"7797c4994be4d8e1ed91452ecf2ca425.SwqIAI1167" forHTTPHeaderField:@"signature"];
-        NSString* token = @"eyJhbGciOiJIUzUxMiIsInppcCI6IkRFRiJ9.eNpkzkkOwjAMheG7eN1IzuDU6Q04htOmIogOkFZiEHcn6oINW-vT__yGXAp0cMuvcx5kgQaybNBp8mQsOuQGZB-q0IzWOsuIVNFly_XGQapySQn1rJwWrWIbWmWwF9eGRJhixemxHkUfiI9i2eNfcY7jb9ZwRetVtnG5T9BhA_0yrTI_T_UTZqORNAdvyYbg-fMFAAD__w.n2lS40wqyGypLxFukz62aWgaPZqiYLGJCoUYjiESZ_8zlvJlnDGXNrQTsMrtuOvD5RVg0lvcJPDNV3gyT8Qumw";
-        
-        [self.manager.requestSerializer setValue:token forHTTPHeaderField:@"accessToken"];
 }
 
 #pragma mark --- private

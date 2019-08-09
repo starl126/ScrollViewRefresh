@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "LXViewController.h"
 
 @interface AppDelegate ()
 
@@ -17,10 +16,6 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    UINavigationController* nav = [[UINavigationController alloc] initWithRootViewController:LXViewController.new];
-    self.window.rootViewController = nav;
-    [self.window makeKeyAndVisible];
     return YES;
 }
 
