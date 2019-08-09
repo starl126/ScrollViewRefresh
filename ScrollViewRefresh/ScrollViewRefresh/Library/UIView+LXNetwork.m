@@ -57,9 +57,9 @@
 ///缓存分页数据，用于多接口分页校正
 @property (nonatomic, strong) NSMutableDictionary* lx_isPageDictM;
 ///是否在请求网络中
-@property (nonatomic, assign, getter=isRequesting) BOOL requesting;
-
-@property (nonatomic, strong) LXAgencyObserver* scrollPositionObv;
+@property (nonatomic, assign) BOOL lx_requesting;
+///滚动位置观察者对象
+@property (nonatomic, strong) LXAgencyObserver* lx_scrollPositionObv;
 
 @end
 
@@ -122,9 +122,9 @@
     if ([self.lx_delegate respondsToSelector:@selector(lx_requestTwiceOneTime)] &&
         [self.lx_delegate lx_requestTwiceOneTime] &&
         self.lx_footer) {
-        self.scrollPositionObv = [LXAgencyObserver new];
-        self.scrollPositionObv.consignorView = self;
-        self.scrollPositionObv.needRequestBlock = ^{
+        self.lx_scrollPositionObv = [LXAgencyObserver new];
+        self.lx_scrollPositionObv.lx_consignorView = self;
+        self.lx_scrollPositionObv.lx_needRequestBlock = ^{
             [lx_weakSelf lx_actionForPullUpRefresh];
         };
     }
@@ -151,7 +151,7 @@
         [scrollSelf.mj_footer endRefreshingWithNoMoreData];
         return;
     }
-    if (self.requesting) {
+    if (self.lx_requesting) {
         return;
     }
     scrollSelf.lx_current++;
@@ -163,8 +163,8 @@
     NSString* url = [self lx_checkedUrl];
     [self lx_cacheIsPageWithUrl:url];
     id parameter = [self lx_checkedParameter];
-    self.requesting = YES;
-    self.scrollPositionObv.requesting = YES;
+    self.lx_requesting = YES;
+    self.lx_scrollPositionObv.lx_requesting = YES;
     
     LXWeakSelf;
     switch (method) {
@@ -445,8 +445,8 @@
         return;
     }
     
-    self.requesting = NO;
-    self.scrollPositionObv.requesting = NO;
+    self.lx_requesting = NO;
+    self.lx_scrollPositionObv.lx_requesting = NO;
     if (responseObject) {
         NSInteger code = [responseObject[@"code"] integerValue];
         NSString* msg  = responseObject[@"msg"];
@@ -562,8 +562,8 @@
         //        NSLog(@"无效identifier=%tu",task.taskIdentifier);
         return;
     }
-    self.requesting = NO;
-    self.scrollPositionObv.requesting = NO;
+    self.lx_requesting = NO;
+    self.lx_scrollPositionObv.lx_requesting = NO;
     if ([self.lx_delegate respondsToSelector:@selector(lx_failRequestWithMessage:code:url:)]) {
         [self.lx_delegate lx_failRequestWithMessage:error.localizedDescription code:error.code url:url];
     }
@@ -668,17 +668,17 @@
 - (NSMutableDictionary *)lx_isPageDictM {
     return objc_getAssociatedObject(self, @selector(setLx_isPageDictM:));
 }
-- (void)setRequesting:(BOOL)requesting {
-    objc_setAssociatedObject(self, _cmd, @(requesting), OBJC_ASSOCIATION_ASSIGN);
+- (void)setLx_requesting:(BOOL)lx_requesting {
+    objc_setAssociatedObject(self, _cmd, @(lx_requesting), OBJC_ASSOCIATION_ASSIGN);
 }
-- (BOOL)isRequesting {
-    return [objc_getAssociatedObject(self, @selector(setRequesting:)) boolValue];
+- (BOOL)lx_requesting {
+    return [objc_getAssociatedObject(self, @selector(setLx_requesting:)) boolValue];
 }
-- (void)setScrollPositionObv:(LXAgencyObserver *)scrollPositionObv {
-    objc_setAssociatedObject(self, _cmd, scrollPositionObv, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setLx_scrollPositionObv:(LXAgencyObserver *)lx_scrollPositionObv {
+    objc_setAssociatedObject(self, _cmd, lx_scrollPositionObv, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-- (LXAgencyObserver *)scrollPositionObv {
-    return objc_getAssociatedObject(self, @selector(setScrollPositionObv:));
+- (LXAgencyObserver *)lx_scrollPositionObv {
+    return objc_getAssociatedObject(self, @selector(setLx_scrollPositionObv:));
 }
 
 @end

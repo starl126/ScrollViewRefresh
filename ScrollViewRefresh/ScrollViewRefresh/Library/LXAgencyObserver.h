@@ -11,11 +11,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface LXAgencyObserver : NSObject
 
 ///委托者控件
-@property (nonatomic, weak) UIView* consignorView;
+@property (nonatomic, weak) UIView* lx_consignorView;
 ///是否正在请求网络中
-@property (nonatomic, assign, getter=isRequesting) BOOL requesting;
+@property (nonatomic, assign, getter=isRequesting) BOOL lx_requesting;
 ///请求网络事件回调
-@property (nonatomic, copy) dispatch_block_t needRequestBlock;
+@property (nonatomic, copy) dispatch_block_t lx_needRequestBlock;
 
 @end
 
