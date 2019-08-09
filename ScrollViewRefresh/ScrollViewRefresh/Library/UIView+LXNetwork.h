@@ -10,7 +10,7 @@
 #import "LXNetworkConfigureProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
+///封装网络请求
 @interface UIView (LXNetwork)
 
 ///设置代理，只有在代理不为nil时才能使用

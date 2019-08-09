@@ -7,13 +7,13 @@
 //
 
 #import "UIView+LXNetwork.h"
-#import "LXObserver.h"
+#import "LXAgencyObserver.h"
 
 #define LXScrollSelf UIScrollView* scrollSelf = (UIScrollView*)self
 #define LXScrollWeakSelf __weak typeof(UIScrollView*) lx_scrollWeakSelf = (UIScrollView*)self
 #define LXWeakSelf __weak typeof(self) lx_weakSelf = self
 
-@interface LXTaskManagerModel : NSObject
+@interface LXTaskManagerModel: NSObject
 
 @property (nonatomic, readonly) NSString* url;
 @property (nonatomic,   assign) NSUInteger latestIdentifier;
@@ -59,7 +59,7 @@
 ///是否在请求网络中
 @property (nonatomic, assign, getter=isRequesting) BOOL requesting;
 
-@property (nonatomic, strong) LXObserver* obv;
+@property (nonatomic, strong) LXAgencyObserver* scrollPositionObv;
 
 @end
 
@@ -71,10 +71,10 @@
         return;
     }
     
+    LXWeakSelf;
     if ([self.lx_delegate respondsToSelector:@selector(lx_refreshOption)]) {
         LXRefreshOption opt = [self.lx_delegate lx_refreshOption];
         LXScrollSelf;
-        LXWeakSelf;
         
         switch (opt) {
             case LXRefreshOptionHeader:
@@ -122,11 +122,11 @@
     if ([self.lx_delegate respondsToSelector:@selector(lx_requestTwiceOneTime)] &&
         [self.lx_delegate lx_requestTwiceOneTime] &&
         self.lx_footer) {
-        
-//        UIScrollView* scrollSelf = (UIScrollView*)self;
-//        [scrollSelf addObserver:scrollSelf forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:NULL];
-//        [self.obv addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:NULL];
-        self.obv.obv = self;
+        self.scrollPositionObv = [LXAgencyObserver new];
+        self.scrollPositionObv.consignorView = self;
+        self.scrollPositionObv.needRequestBlock = ^{
+            [lx_weakSelf lx_actionForPullUpRefresh];
+        };
     }
 }
 ///下拉刷新
@@ -164,6 +164,7 @@
     [self lx_cacheIsPageWithUrl:url];
     id parameter = [self lx_checkedParameter];
     self.requesting = YES;
+    self.scrollPositionObv.requesting = YES;
     
     LXWeakSelf;
     switch (method) {
@@ -186,7 +187,6 @@
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                 [lx_weakSelf lx_dealWithResponseTask:task error:error];
             }];
-            NSLog(@"----%@", self.manager);
             [self lx_cacheTask:task.copy url:url];
             [self lx_cacheDataClassWithUrl:url];
         }
@@ -433,20 +433,6 @@
     }
     [self.lx_isPageDictM setObject:@(isPage) forKey:url];
 }
-///观察scroll view的contentOffset
-//- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-//    if ([keyPath isEqualToString:@"contentOffset"]) {
-//        CGPoint point = [change[@"new"] CGPointValue];
-//        if (!CGPointEqualToPoint(point, CGPointZero) &&
-//            ((UIScrollView*)self).contentSize.height != 0) {
-////            NSLog(@"point = %@---%.2f---%.2f", NSStringFromCGPoint(point),self.bounds.size.height,((UIScrollView*)self).contentSize.height);
-//            BOOL position = point.y + self.bounds.size.height*1.3 > ((UIScrollView*)self).contentSize.height;
-//            if (position && !self.isRequesting) {
-//                [self lx_actionForPullUpRefresh];
-//            }
-//        }
-//    }
-//}
 ///是否隐藏footer view
 - (void)lx_hideFooterView:(BOOL)hide {
     self.lx_footer.hidden = hide;
@@ -465,11 +451,12 @@
     }
     
     self.requesting = NO;
+    self.scrollPositionObv.requesting = NO;
     if (responseObject) {
         NSInteger code = [responseObject[@"code"] integerValue];
         NSString* msg  = responseObject[@"msg"];
         id data = responseObject[@"data"];
-        if (code != 0) {
+        if (code != 200) {
             self.lx_current = self.lx_previous;
             [self.lx_header endRefreshing];
             [self.lx_footer endRefreshing];
@@ -581,6 +568,7 @@
         return;
     }
     self.requesting = NO;
+    self.scrollPositionObv.requesting = NO;
     if ([self.lx_delegate respondsToSelector:@selector(lx_failRequestWithMessage:code:url:)]) {
         [self.lx_delegate lx_failRequestWithMessage:error.localizedDescription code:error.code url:url];
     }
@@ -593,7 +581,6 @@
     self.lx_dataClassDictM = [NSMutableDictionary dictionary];
     self.lx_dataSourceArrM = [NSMutableArray array];
     self.lx_isPageDictM    = [NSMutableDictionary dictionary];
-    self.obv = [LXObserver new];
 }
 
 #pragma mark --- public
@@ -615,7 +602,6 @@
         [self lx_actionForDealWithRefresh];
         //初始化数据
         [self lx_initConfigure];
-        self.obv.obv = self;
     }
 }
 - (id<LXNetworkConfigureProtocol>)lx_delegate {
@@ -693,20 +679,11 @@
 - (BOOL)isRequesting {
     return [objc_getAssociatedObject(self, @selector(setRequesting:)) boolValue];
 }
-- (void)setObv:(LXObserver *)obv {
-    objc_setAssociatedObject(self, _cmd, obv, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setScrollPositionObv:(LXAgencyObserver *)scrollPositionObv {
+    objc_setAssociatedObject(self, _cmd, scrollPositionObv, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-- (LXObserver *)obv {
-    return objc_getAssociatedObject(self, @selector(setObv:));
+- (LXAgencyObserver *)scrollPositionObv {
+    return objc_getAssociatedObject(self, @selector(setScrollPositionObv:));
 }
-
-//- (void)dealloc {
-//    if ([self.lx_delegate respondsToSelector:@selector(lx_requestTwiceOneTime)] &&
-//        [self.lx_delegate lx_requestTwiceOneTime] &&
-//        self.lx_footer) {
-//
-//        [self removeObserver:self forKeyPath:@"contentOffset"];
-//    }
-//}
 
 @end

@@ -7,11 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4B71328D22FC4C3D0050A543 /* LXObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B71328C22FC4C3D0050A543 /* LXObserver.m */; };
+		4B15AFB122FD0C6C004AE15A /* LXNewsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B15AFB022FD0C6C004AE15A /* LXNewsModel.m */; };
+		4B71328D22FC4C3D0050A543 /* LXAgencyObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B71328C22FC4C3D0050A543 /* LXAgencyObserver.m */; };
 		4B71329022FC4E530050A543 /* LXViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B71328F22FC4E530050A543 /* LXViewController.m */; };
 		4B71329322FC520F0050A543 /* LXScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B71329222FC520F0050A543 /* LXScrollView.m */; };
-		4B7375B322F40EBA00DCC2CB /* LXStockModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7375B222F40EBA00DCC2CB /* LXStockModel.m */; };
-		4B8746D122F2CA680086090A /* LXHttpService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8746D022F2CA680086090A /* LXHttpService.m */; };
 		4B93713D22F52D84005C1BED /* UIView+LXNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B93713B22F51D9A005C1BED /* UIView+LXNetwork.m */; };
 		4BE2775222E72F4900083103 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE2775122E72F4900083103 /* AppDelegate.m */; };
 		4BE2775522E72F4900083103 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE2775422E72F4900083103 /* ViewController.m */; };
@@ -43,16 +42,14 @@
 
 /* Begin PBXFileReference section */
 		4AB981EC2EB8F96D243C8CE3 /* Pods_ScrollViewRefresh.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ScrollViewRefresh.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B71328B22FC4C3D0050A543 /* LXObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXObserver.h; sourceTree = "<group>"; };
-		4B71328C22FC4C3D0050A543 /* LXObserver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXObserver.m; sourceTree = "<group>"; };
+		4B15AFAF22FD0C6C004AE15A /* LXNewsModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXNewsModel.h; sourceTree = "<group>"; };
+		4B15AFB022FD0C6C004AE15A /* LXNewsModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXNewsModel.m; sourceTree = "<group>"; };
+		4B71328B22FC4C3D0050A543 /* LXAgencyObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXAgencyObserver.h; sourceTree = "<group>"; };
+		4B71328C22FC4C3D0050A543 /* LXAgencyObserver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXAgencyObserver.m; sourceTree = "<group>"; };
 		4B71328E22FC4E530050A543 /* LXViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXViewController.h; sourceTree = "<group>"; };
 		4B71328F22FC4E530050A543 /* LXViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXViewController.m; sourceTree = "<group>"; };
 		4B71329122FC520F0050A543 /* LXScrollView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXScrollView.h; sourceTree = "<group>"; };
 		4B71329222FC520F0050A543 /* LXScrollView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXScrollView.m; sourceTree = "<group>"; };
-		4B7375B122F40EBA00DCC2CB /* LXStockModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXStockModel.h; sourceTree = "<group>"; };
-		4B7375B222F40EBA00DCC2CB /* LXStockModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXStockModel.m; sourceTree = "<group>"; };
-		4B8746CF22F2CA680086090A /* LXHttpService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LXHttpService.h; sourceTree = "<group>"; };
-		4B8746D022F2CA680086090A /* LXHttpService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXHttpService.m; sourceTree = "<group>"; };
 		4B93713A22F51D9A005C1BED /* UIView+LXNetwork.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+LXNetwork.h"; sourceTree = "<group>"; };
 		4B93713B22F51D9A005C1BED /* UIView+LXNetwork.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+LXNetwork.m"; sourceTree = "<group>"; };
 		4BE2774D22E72F4900083103 /* ScrollViewRefresh.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScrollViewRefresh.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -103,15 +100,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4B8746CE22F2CA080086090A /* Network */ = {
-			isa = PBXGroup;
-			children = (
-				4B8746CF22F2CA680086090A /* LXHttpService.h */,
-				4B8746D022F2CA680086090A /* LXHttpService.m */,
-			);
-			path = Network;
-			sourceTree = "<group>";
-		};
 		4BE2774422E72F4900083103 = {
 			isa = PBXGroup;
 			children = (
@@ -137,7 +125,6 @@
 		4BE2774F22E72F4900083103 /* ScrollViewRefresh */ = {
 			isa = PBXGroup;
 			children = (
-				4B8746CE22F2CA080086090A /* Network */,
 				4BE2778322E732A400083103 /* Library */,
 				4BE2775022E72F4900083103 /* AppDelegate.h */,
 				4BE2775122E72F4900083103 /* AppDelegate.m */,
@@ -147,8 +134,8 @@
 				4B71329222FC520F0050A543 /* LXScrollView.m */,
 				4B71328E22FC4E530050A543 /* LXViewController.h */,
 				4B71328F22FC4E530050A543 /* LXViewController.m */,
-				4B7375B122F40EBA00DCC2CB /* LXStockModel.h */,
-				4B7375B222F40EBA00DCC2CB /* LXStockModel.m */,
+				4B15AFAF22FD0C6C004AE15A /* LXNewsModel.h */,
+				4B15AFB022FD0C6C004AE15A /* LXNewsModel.m */,
 				4BE2775622E72F4900083103 /* Main.storyboard */,
 				4BE2775922E72F4A00083103 /* Assets.xcassets */,
 				4BE2775B22E72F4A00083103 /* LaunchScreen.storyboard */,
@@ -180,8 +167,8 @@
 		4BE2778322E732A400083103 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				4B71328B22FC4C3D0050A543 /* LXObserver.h */,
-				4B71328C22FC4C3D0050A543 /* LXObserver.m */,
+				4B71328B22FC4C3D0050A543 /* LXAgencyObserver.h */,
+				4B71328C22FC4C3D0050A543 /* LXAgencyObserver.m */,
 				4B93713A22F51D9A005C1BED /* UIView+LXNetwork.h */,
 				4B93713B22F51D9A005C1BED /* UIView+LXNetwork.m */,
 				4BE2778A22E7333100083103 /* LXNetworkConfigureProtocol.h */,
@@ -392,11 +379,10 @@
 			files = (
 				4B71329022FC4E530050A543 /* LXViewController.m in Sources */,
 				4B93713D22F52D84005C1BED /* UIView+LXNetwork.m in Sources */,
-				4B7375B322F40EBA00DCC2CB /* LXStockModel.m in Sources */,
+				4B15AFB122FD0C6C004AE15A /* LXNewsModel.m in Sources */,
 				4BE2775522E72F4900083103 /* ViewController.m in Sources */,
-				4B8746D122F2CA680086090A /* LXHttpService.m in Sources */,
 				4BE2776022E72F4A00083103 /* main.m in Sources */,
-				4B71328D22FC4C3D0050A543 /* LXObserver.m in Sources */,
+				4B71328D22FC4C3D0050A543 /* LXAgencyObserver.m in Sources */,
 				4BE2775222E72F4900083103 /* AppDelegate.m in Sources */,
 				4B71329322FC520F0050A543 /* LXScrollView.m in Sources */,
 			);
