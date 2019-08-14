@@ -469,9 +469,11 @@
             NSInteger current = [[data objectForKey:[self lx_currentName]] integerValue];
             NSInteger pages = [[data objectForKey:[self lx_totalPagesName]] integerValue];
             
-            self.lx_current = current;
-            self.lx_total = pages;
-            self.lx_previous = self.lx_current;
+            if (current != 0) {
+                self.lx_current = current;
+                self.lx_total = pages;
+                self.lx_previous = self.lx_current;
+            }
             
             [self lx_hideFooterView:NO];
             if (current >= pages) {
