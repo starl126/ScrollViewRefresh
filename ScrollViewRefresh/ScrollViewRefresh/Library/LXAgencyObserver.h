@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 ///委托者控件
 @property (nonatomic, weak) UIView* lx_consignorView;
-///是否正在请求网络中
+///是否正在请求网络中，在请求中则禁止掉滚动回调接口
 @property (nonatomic, assign, getter=isRequesting) BOOL lx_requesting;
 ///请求网络事件回调
 @property (nonatomic, copy) dispatch_block_t lx_needRequestBlock;

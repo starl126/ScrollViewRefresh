@@ -396,10 +396,10 @@
         }
     }
     if (existModel) {
-//        NSLog(@"count=%tu",existModel.taskArrM.count);
+        //NSLog(@"count=%tu",existModel.taskArrM.count);
         [existModel.taskArrM addObject:task];
     }else {
-//        NSLog(@"count=%tu",existModel.taskArrM.count);
+        //NSLog(@"count=%tu",existModel.taskArrM.count);
         LXTaskManagerModel* taskModel = [[LXTaskManagerModel alloc] initWithUrl:url identifier:task.taskIdentifier taskArr:@[task]];
         [self.lx_taskArrM addObject:taskModel];
     }
@@ -441,7 +441,7 @@
         if ([self.lx_delegate respondsToSelector:@selector(lx_cancelTaskWithUrl:)]) {
             [self.lx_delegate lx_cancelTaskWithUrl:url];
         }
-//        NSLog(@"无效identifier=%tu",task.taskIdentifier);
+        //NSLog(@"无效identifier=%tu",task.taskIdentifier);
         return;
     }
     
@@ -456,6 +456,9 @@
             [self.lx_header endRefreshing];
             [self.lx_footer endRefreshing];
             
+            //网络请求失败后，此时会禁止掉监听滚动自动刷新功能，避免接口过多请求，但保留手动上拉加载更多功能
+            self.lx_scrollPositionObv.lx_requesting = YES;
+            
             if ([self.lx_delegate respondsToSelector:@selector(lx_failRequestWithMessage:code:url:)]) {
                 [self.lx_delegate lx_failRequestWithMessage:msg code:code url:url];
             }
@@ -466,33 +469,6 @@
             NSInteger current = [[data objectForKey:[self lx_currentName]] integerValue];
             NSInteger pages = [[data objectForKey:[self lx_totalPagesName]] integerValue];
             
-            NSArray* arr = [data objectForKey:[self lx_dataArrName]];
-            //解析数据
-            Class cls = [self.lx_dataClassDictM objectForKey:url];
-            
-            if (cls) {
-                NSArray* models = [NSArray yy_modelArrayWithClass:cls json:arr];
-                
-                if (self.lx_header.isRefreshing) {
-                    [self.lx_dataSourceArrM setArray:models];
-                }else {
-                    [self.lx_dataSourceArrM addObjectsFromArray:models];
-                }
-                if ([self.lx_delegate respondsToSelector:@selector(lx_successRequestCurrentPageData:totalData:url:)]) {
-                    //                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
-                    [self.lx_delegate lx_successRequestCurrentPageData:models totalData:self.lx_dataSourceArrM.copy url:url];
-                }
-            }else {
-                if (self.lx_header.isRefreshing) {
-                    [self.lx_dataSourceArrM setArray:arr];
-                }else {
-                    [self.lx_dataSourceArrM addObjectsFromArray:arr];
-                }
-                if ([self.lx_delegate respondsToSelector:@selector(lx_successRequestCurrentPageData:totalData:url:)]) {
-                    //                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
-                    [self.lx_delegate lx_successRequestCurrentPageData:arr totalData:self.lx_dataSourceArrM.copy url:url];
-                }
-            }
             self.lx_current = current;
             self.lx_total = pages;
             self.lx_previous = self.lx_current;
@@ -501,12 +477,41 @@
             if (current >= pages) {
                 [self.lx_footer endRefreshingWithNoMoreData];
                 [self.lx_header endRefreshing];
+                //再无更多数据后，禁止掉监听滚动自动刷新功能，避免接口过多请求
+                self.lx_scrollPositionObv.lx_requesting = YES;
             }else {
                 [self.lx_footer endRefreshing];
                 [self.lx_footer resetNoMoreData];
                 [self.lx_header endRefreshing];
             }
             
+            NSArray* arr = [data objectForKey:[self lx_dataArrName]];
+            //解析数据
+            Class cls = [self.lx_dataClassDictM objectForKey:url];
+            
+            if (cls) {
+                NSArray* models = [NSArray yy_modelArrayWithClass:cls json:arr];
+                
+                if (self.lx_current == 1) {
+                    [self.lx_dataSourceArrM setArray:models];
+                }else {
+                    [self.lx_dataSourceArrM addObjectsFromArray:models];
+                }
+                if ([self.lx_delegate respondsToSelector:@selector(lx_successRequestCurrentPageData:totalData:url:)]) {
+                    //NSLog(@"有效identifer=%tu",task.taskIdentifier);
+                    [self.lx_delegate lx_successRequestCurrentPageData:models totalData:self.lx_dataSourceArrM.copy url:url];
+                }
+            }else {
+                if (self.lx_current == 1) {
+                    [self.lx_dataSourceArrM setArray:arr];
+                }else {
+                    [self.lx_dataSourceArrM addObjectsFromArray:arr];
+                }
+                if ([self.lx_delegate respondsToSelector:@selector(lx_successRequestCurrentPageData:totalData:url:)]) {
+                    //NSLog(@"有效identifer=%tu",task.taskIdentifier);
+                    [self.lx_delegate lx_successRequestCurrentPageData:arr totalData:self.lx_dataSourceArrM.copy url:url];
+                }
+            }
         }else {//非分页数据
             if (self.lx_header != nil) {
                 [self.lx_header endRefreshing];
@@ -523,12 +528,12 @@
                 }
                 
                 if ([self.lx_delegate respondsToSelector:@selector(lx_successRequestData:url:)]) {
-                    //                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
+                    //NSLog(@"有效identifer=%tu",task.taskIdentifier);
                     [self.lx_delegate lx_successRequestData:model url:url];
                 }
             }else {
                 if ([self.lx_delegate respondsToSelector:@selector(lx_successRequestData:url:)]) {
-                    //                    NSLog(@"有效identifer=%tu",task.taskIdentifier);
+                    //NSLog(@"有效identifer=%tu",task.taskIdentifier);
                     [self.lx_delegate lx_successRequestData:data url:url];
                 }
             }
@@ -548,7 +553,7 @@
     NSString* url = task.originalRequest.URL.absoluteString;
     //判断是否是主动cancel的任务
     if (error.code == -999 || [error.localizedDescription isEqualToString:@"cancelled"]) {
-        //        NSLog(@"取消task导致的无效identifier=%tu",task.taskIdentifier);
+        //NSLog(@"取消task导致的无效identifier=%tu",task.taskIdentifier);
         if ([self.lx_delegate respondsToSelector:@selector(lx_cancelTaskWithUrl:)]) {
             [self.lx_delegate lx_cancelTaskWithUrl:url];
         }
@@ -559,14 +564,15 @@
         if ([self.lx_delegate respondsToSelector:@selector(lx_cancelTaskWithUrl:)]) {
             [self.lx_delegate lx_cancelTaskWithUrl:url];
         }
-        //        NSLog(@"无效identifier=%tu",task.taskIdentifier);
+        //NSLog(@"无效identifier=%tu",task.taskIdentifier);
         return;
     }
-    self.lx_requesting = NO;
-    self.lx_scrollPositionObv.lx_requesting = NO;
+    
     if ([self.lx_delegate respondsToSelector:@selector(lx_failRequestWithMessage:code:url:)]) {
         [self.lx_delegate lx_failRequestWithMessage:error.localizedDescription code:error.code url:url];
     }
+    //网络请求失败后，此时会禁止掉监听滚动自动刷新功能，避免接口过多请求，但保留手动上拉加载更多功能
+    self.lx_scrollPositionObv.lx_requesting = YES;
 }
 ///初始化数据
 - (void)lx_initConfigure {

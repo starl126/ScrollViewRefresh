@@ -18,9 +18,12 @@
     
     if ([keyPath isEqualToString:@"contentOffset"]) {
         CGPoint point = [change[@"new"] CGPointValue];
-        if (!CGPointEqualToPoint(point, CGPointZero) &&
-            ((UIScrollView*)self.lx_consignorView).contentSize.height != 0) {
-            //            NSLog(@"point = %@---%.2f---%.2f", NSStringFromCGPoint(point),self.bounds.size.height,((UIScrollView*)self).contentSize.height);
+        if (
+            !CGPointEqualToPoint(point, CGPointZero) &&
+            ((UIScrollView*)self.lx_consignorView).contentSize.height != 0 &&
+            ((UIScrollView*)self.lx_consignorView).contentSize.height > self.lx_consignorView.bounds.size.height
+            ) {
+            //NSLog(@"point = %@---%.2f---%.2f", NSStringFromCGPoint(point),self.bounds.size.height,((UIScrollView*)self).contentSize.height);
             BOOL position = point.y + self.lx_consignorView.bounds.size.height*1.3 > ((UIScrollView*)self.lx_consignorView).contentSize.height;
             if (position && !self.lx_requesting) {
                 if (self.lx_needRequestBlock) {
