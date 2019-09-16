@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, getter=isRequesting) BOOL lx_requesting;
 ///请求网络事件回调
 @property (nonatomic, copy) dispatch_block_t lx_needRequestBlock;
+///释放观察者,必须手动调用
+- (void)lx_releaseObserver;
 
 @end
 

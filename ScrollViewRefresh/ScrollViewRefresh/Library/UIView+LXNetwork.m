@@ -593,6 +593,11 @@
     }
     [self lx_actionForStartRequestData];
 }
+- (void)lx_releaseObsever {
+    if (self.lx_scrollPositionObv) {
+        [self.lx_scrollPositionObv lx_releaseObserver];
+    }
+}
 #pragma mark --- 属性设置
 - (void)setLx_delegate:(id<LXNetworkConfigureProtocol>)lx_delegate {
     objc_setAssociatedObject(self, _cmd, lx_delegate, OBJC_ASSOCIATION_ASSIGN);

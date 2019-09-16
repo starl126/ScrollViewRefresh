@@ -33,9 +33,10 @@
         }
     }
 }
-- (void)dealloc {
+- (void)lx_releaseObserver {
     [_lx_consignorView removeObserver:self forKeyPath:@"contentOffset"];
-    NSLog(@"_consignorView = %@", _lx_consignorView);
+}
+- (void)dealloc {
     NSLog(@"dealloc --- %@", NSStringFromClass(self.class));
 }
 

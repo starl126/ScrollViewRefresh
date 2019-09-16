@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) NSMutableArray* lx_dataSourceArrM;
 ///请求数据，如果是分页，则是请求第一页数据；如果不是分页，则请求所有数据
 - (void)lx_requestData;
+///释放观察者对象,必须在当前控件销毁前调用。在实现了LXNetworkConfigureProtocol的代理方法lx_requestTwiceOneTime返回yes时才有必要调用
+- (void)lx_releaseObsever;
 
 @end
 
